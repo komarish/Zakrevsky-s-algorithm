@@ -1,0 +1,2 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8028: промежуточный каталог (x64\Debug\) содержит файлы, которые используются совместно с другим проектом (ConsoleApplication1.vcxproj, Zakrevsky-s -algorithm.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+  ConsoleApplication1.vcxproj -> E:\MARINA\STUDY\Карантин\Предметы\Магистратура\семестр 3\решение логических уравнений\лабораторные\Lab_1\Проект\Zakrevsky-s -algorithm\x64\Debug\Zakrevsky-s-algorithm.exe
