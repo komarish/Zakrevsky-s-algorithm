@@ -105,6 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +132,7 @@
     <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="BBV.cpp" />
     <ClCompile Include="BoolEquation.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Heuristics.cpp" />
     <ClCompile Include="Interval.cpp" />
@@ -140,6 +142,7 @@
     <ClInclude Include="Algorithm.h" />
     <ClInclude Include="BBV.h" />
     <ClInclude Include="BoolEquation.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Heuristics.h" />
     <ClInclude Include="Interval.h" />
     <ClInclude Include="NodeBoolTree.h" />

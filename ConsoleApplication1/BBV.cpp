@@ -18,6 +18,8 @@ BBV::BBV()
 
 BBV::BBV(int size_v)
 {
+	//cout << "->BBV(int size_v), sixe_v = " << size_v << endl;
+	
 	if (size_v > 0)
 	{
 		vec = new byte[(size_v - 1) / 8 + 1];//избегаем случай размера кратного восьми

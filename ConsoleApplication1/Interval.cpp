@@ -4,6 +4,8 @@
 
 Interval::Interval(size_t len)
 {
+	
+	//cout << "Interval(size_t len), len =" << len << endl;
 	vec = BBV(len);
 	dnc = BBV(len);
 }
@@ -58,6 +60,9 @@ void Interval::setInterval(BBV& vec, BBV& dnc)
 Interval& Interval::operator=(Interval& ibv)
 {
 	// TODO: вставьте здесь оператор return
+
+	vec = ibv.vec;
+	dnc = ibv.dnc;
 
 	return *this;
 }
@@ -122,10 +127,13 @@ bool Interval::isOrthogonal(Interval& ibv)
 	cout << (string)ibv << endl;
 
 	BBV zero(vec.getSize());
+
 	BBV tmpUV(zero);
 	BBV tmpU(zero);
 	BBV tmpV(zero);
+
 	BBV answer(zero);
+
 	tmpUV = dnc | ibv.dnc;
 	//Output vector for debug
 
@@ -202,7 +210,7 @@ BBV Interval::getDnc()
 
 void Interval::setVec(BBV& v)
 {
-	dnc = v;
+	vec = v;
 }
 
 void Interval::setDnc(BBV& v)
@@ -212,6 +220,9 @@ void Interval::setDnc(BBV& v)
 
 void Interval::setValue(char value, int ix)
 {
+	//cout << "vec.size = " << vec.getSize() << " ix = " << ix << endl;
+
+	
 	if (ix < 0 || ix > vec.getSize())
 		throw "Out of range";
 	if (value == '-')
@@ -221,7 +232,7 @@ void Interval::setValue(char value, int ix)
 	}
 	else
 		if (value == '0') {
-			vec[ix] = 0;
+			vec[ix] = 0; //
 			dnc[ix] = 0;
 		}
 		else

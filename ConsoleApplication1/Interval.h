@@ -5,10 +5,12 @@
 
 class Interval
 {
+	
+public:
 	BBV vec;
 	BBV dnc;
 public:
-	explicit Interval(size_t len = 8);
+	explicit Interval(size_t len = 8); //!
 	Interval(const char* vec_in, const char* dnc_in);
 	explicit Interval(const char* vector);
 	Interval(BBV& vec_in, BBV& dnc_in);
