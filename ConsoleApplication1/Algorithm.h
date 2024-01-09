@@ -16,18 +16,11 @@ using namespace std;
 
 
 
-struct Solution
-{
-	//root
-	//ещё что-нибудь, статистика мб
-};
-
 
 class Algorithm
 {
 	Heuristics* heuristics;
-	//указатель на матрицу и её строки, чтобы можно было "вычеркивать"
-
+	
 public:
 	enum HeuristicsFlags
 	{
@@ -57,7 +50,6 @@ public:
 void Simplification(Component component, NodeBoolTree*& node, int sz)
 {
 
-	//Interval** newDnf = new Interval * [numrows];
 	
 	int row_value;
 
@@ -67,53 +59,32 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 		
 		if (!node->rowsToBeConsidered[i])
 		{
-			//break;
 			continue;
 		}
 		
 		
 		row_value = node->dnf[i]->getValue(component.n_comp) - '0';
-		//cout << row_value << endl;
 
-		//строки, которые не "удаляются" из матрицы
+		//строки, которые "удаляются" из матрицы
 		if (row_value == !component.val_comp)
 		{
-			//cout << i << endl;
-			//newDnf[i] = setIntevals[i];
-			//node->dnf[i] = nullptr;
 			node->rowsToBeConsidered[i] = 0;
 			node->count--;
 		}
 
 	
 	}
-
-
-
-	//cout << "count = " << node->count << endl;
 	
 }
 
 
 
-
-
-
-
-
-
-
-
-
 	Component checkHeuristicRules(NodeBoolTree*& node, int sz, int countVar)
 	{	
-		Component component;
-		
-		component = heuristics->checkRules(node, sz, countVar);
 
-		return component;
+		return
+			heuristics->checkRules(node, sz, countVar);
 
-		//должно быть только return heuristics->checkRules()
 	}
 
 	
@@ -147,7 +118,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 		Component component;
 
-		//bool isEmptyRow = false;
 
 		int i, j;
 
@@ -157,7 +127,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 			
 			if (!node->rowsToBeConsidered[i])
 			{
-				//break;
 				continue;
 			}
 			
@@ -171,7 +140,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 					//т.е. dnc[j] != 0, то выходим из цикла 
 					if (node->dnf[i]->getDnc()[j] == 0)
 					{
-						//isEmptyRow = false;
 						break;
 					}
 				}		
@@ -180,8 +148,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 			//если вся строка целиком состоит из черточек
 			if (j == countVar)
 			{
-				
-				//cout << "rule 2!" << endl;
 				component.n_comp = -2;
 
 				return component;
@@ -203,26 +169,25 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 			
 			if (!node->rowsToBeConsidered[i])
 			{
-				//break;
 				continue;
 			}
 			
 			Interval tmpI;
 
-			BBV tmpVec = node->dnf[i]->vec; //getVec
+			BBV tmpVec;
+			tmpVec = node->dnf[i]->getVec();
+
+			BBV nodeDnc;
+			nodeDnc = node->dnf[i]->getDnc();
+
 			BBV tmpDnc = node->varsToBeConsidered;
 
 			tmpDnc = ~tmpDnc;
-			tmpDnc = tmpDnc | node->dnf[i]->dnc; //getDnc
+			tmpDnc = tmpDnc | nodeDnc;
 
 			tmpI.setVec(tmpVec);
-			//tmpI.vec = tmpVec;
 			tmpI.setDnc(tmpDnc);
 
-			//cout << "tmpI" << endl;
-			//cout << tmpI.getVec() << endl;
-			//cout << tmpI.getDnc() << endl;
-			//cout << (string)tmpI << endl;
 			
 			//если только одна компонента определена
 			if (tmpI.rang() == 1)
@@ -239,7 +204,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 					{
 						if (!dnc[j]) //компонента определена
 						{
-							//cout << "rule 1: " << i << endl;
 
 							component.n_comp = j;
 							component.val_comp = !(node->dnf[i]->getVec()[j]);
@@ -254,10 +218,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 			}
 
 		}
-
-
-		//cout << "rule_1" << endl;
-		//component.Print();
 
 		return component;
 	}
@@ -288,17 +248,9 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 		Component component;
 
-		//BBV Zero(countVar), notZero;
-		//notZero = ~Zero;
-
-		//можно заменить на булевы флаги векторы ниже
-
 		bool isNotDefined; //rule 3
 
 		bool isOrth0, isOrth1; //rule 4
-		//cout << isNotDefined << endl;
-		//cout << isOrth0 << endl;
-		//cout << isOrth1 << endl;
 
 		int notDefinedIdx = -1;
 
@@ -319,7 +271,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 					if (!node->rowsToBeConsidered[i])
 					{
-						//break;
 						continue;
 					}
 
@@ -353,10 +304,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 					isOrth1 = 0;
 				}
 
-				//cout << "isNotDefined: " << isNotDefined << endl;
-				//cout << "isOrth0:      " << isOrth0 << endl;
-				//cout << "isOrth1:      " << isOrth1 << endl; //всё правильно
-
 
 				if (isOrth0)
 				{
@@ -377,49 +324,22 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 				if (isNotDefined)
 				{
-					//component.n_comp = j;
-					//component.val_comp = 0; //может быть любое, присвоили 0 //не присвоили
-					//component.val_comp = 0; //может быть любое, присвоили 0
-
-					//return component;
-
 					notDefinedIdx = j;
 				}
 			}
 
 		}
 
-		/*
-		cout << "isNotDefined: "<< isNotDefined << endl;
-		cout << "isOrth0:      " << isOrth0 << endl;
-		cout << "isOrth1:      " << isOrth1 << endl; //всё правильно
-
-		if (isOrth1 == Zero)
-		{
-			cout << "True" << endl;
-		}
-
-		*/
-
-		/*
-		cout << "rule_3-4" << endl;
-
-		cout << "isNotDefined: " << isNotDefined << endl;
-		cout << "isOrth0:      " << isOrth0 << endl;
-		cout << "isOrth1:      " << isOrth1 << endl;
-		*/
 
 
 		//тогда, получается, берем последний неопред. столбец
 		if (notDefinedIdx != -1)
 		{
 			component.n_comp = notDefinedIdx;
-			//component.val_comp = 0; //может быть любое, присвоили 0 //не присвоили
+			
 			component.val_comp = 0; //может быть любое, присвоили 0
 		}
 
-
-		//component.Print();
 
 		return component;
 
@@ -431,46 +351,26 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 	string findRoot(BoolEquation& equation)
 	{
-		//обход дерева
 
 		int sz = equation.getNumRows();
 		int countVar = equation.getCountVar();
 
-		
-		//
+
 		Interval** setIntevals = equation.getSetIntevals();
 
 		Interval** setTest = new Interval * [sz];
 
 		for (int ix = 0; ix < sz; ix++)
 		{
-			//setTest[ix] = nullptr;
 			setTest[ix] = setIntevals[ix];
 		}
 
-
-
-		//Обход дерева. Рассмотрим обход для трех переменных
-		cout << "BEGIN TREETRAVERSAL" << endl;
 
 		string root;
 
 
 		root = TreeTraversal(setTest, sz, countVar);
 
-
-		cout << "END TREETRAVERSAL" << endl;
-
-		/*
-		//Удаляем setIntevals полностью
-		for (int ix = 0; ix < sz; ix++)
-		{
-			delete setIntevals[ix];
-			setIntevals[ix] = nullptr;
-		}
-		*/
-		//После удаление setIntevals, в структуре setTest все адреса не действительные, что не удивительно.
-		//Нужно обнулить все ячейки
 		for (int ix = 0; ix < sz; ix++)
 		{
 			setTest[ix] = nullptr;
@@ -485,63 +385,40 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 	string TreeTraversal(Interval** setIntevals, size_t size, unsigned countVar)
 	{
 
-		//ВЫНЕСИ ПРОВЕРКУ ИСХОДНЫХ ДАННЫХ, if (setIntervals), в частности, в отдельную функцию
 
 		std::stack<NodeBoolTree*> mystack;
 
 		bool continueTravesal = true;
 
-		//bool isNotExist = false;
 
 		NodeBoolTree* currentNode = nullptr;
 
 		//номер текущей переменной
-		int posA = -1; //int posA = 0;
-
-
-		//int varlen = setIntevals[0]->length();
-		//BBV varsToBeConsidered(varlen);
-
-
+		int posA = -1;
 
 
 		BBV varsToBeConsidered(countVar);
-
 		varsToBeConsidered = ~varsToBeConsidered;
-		//cout << "varsToBeConsidered: " << varsToBeConsidered << endl;
 
 
 		BBV rowsToBeConsidered(size);
 		rowsToBeConsidered = ~rowsToBeConsidered;
-		//cout << "rowsToBeConsidered: " << rowsToBeConsidered << endl;
 
-		/*
-		//varsToBeConsidered = ~varsToBeConsidered;
-		for (int i = 0; i < countVar; i++)
-		{
-			varsToBeConsidered[i] = 1;
-		}
-		*/
-		
 
 
 		//нулевой булев вектор
 		BBV Nol(countVar);
-
-		//BBV Nol(varlen);
 
 
 		//не нулевой рабочий вектор. Вектор в которм все компоненты принимают значение 1.
 		BBV NotNol(countVar);
 		NotNol = ~Nol;
 
-		//cout << NotNol;
 
 		//рабочий интервал
 		Interval tmpI(countVar);
 		tmpI.setDnc(NotNol);
 
-		//cout << (string)tmpI;
 
 		
 		//Создаем начальный узел дерева обхода
@@ -549,10 +426,8 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 		//В начальный момент времени это исходное множество.
 
 
-		currentNode = new NodeBoolTree(countVar, size); // currentNode = new NodeBoolTree();
+		currentNode = new NodeBoolTree(countVar, size); 
 
-		//currentNode = new NodeBoolTree(countVar);
-		//currentNode->dnf = new Interval * [size]; //массив указателей
 
 		if (!currentNode->dnf)
 		{
@@ -565,9 +440,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 		{
 			//просто копируем адреса, из setIntevals[ix] в currentNode->dnf[ix].
 			currentNode->dnf[ix] = setIntevals[ix];		
-
-			//cout << setIntevals[ix] << endl;
-			//cout<< (string)(*currentNode->dnf[ix]) << endl;
 		}
 
 		//Изначально задаем для полей  fixVal_0 и fixVal_1 значение false, 
@@ -580,28 +452,14 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 		//По мере фиксирования значений в этом поле отмечаются советующие значения
 		// !
 		currentNode->Solution = tmpI;
-		
-		//cout << (string)currentNode->Solution << endl;
-
-		//cout << currentNode->dnf[0]->length() << endl;
-
 		currentNode->varsToBeConsidered = varsToBeConsidered;
-
-		//cout << currentNode->varsToBeConsidered << endl;
-
 		currentNode->rowsToBeConsidered = rowsToBeConsidered;
-
-		//cout << currentNode->rowsToBeConsidered << endl;
 
 		Component component;
 
 		while (continueTravesal)
 		{
-			//cout << "continueTravesal: " << continueTravesal << endl;
-
-
-
-			/**/
+		
 
 			//Это условие, которое указвает, на то, что для данного узла не проводился анализ 
 			if (currentNode && (!currentNode->fixVal_0 && !currentNode->fixVal_1)) 
@@ -609,12 +467,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 				//Здесь, необходимо анализировать текущее множество интервалов на предмет поиска 
 				// переменной ветвления и фиксации значения для выбранной переменной ветвления.
 
-				/*
-				В предлагаемой реализации, так как это просто пример, мы моделируем общее поведение, 
-				т.е. последовательно для каждой переменной осуществляем ветвление.
-				В часности, всегда, для выбранной переменной фиксируем значение 0, 
-				а этот же узел, но в которм фиксируем значение 1 заносим в стек.
-				*/
 
 				//Здесь, условие  - если рассматриваемы узел, в котором зафиксирована последняя переменная
 				//(так как мы  последовательно перебираем переменные интервала) 
@@ -622,9 +474,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 				//Его удаляем, а из стека достаем новый.   
 
 
-
-				//currentNode->ToBeConsidered == 000000000000....
-				//if (currentNode->var == countVar - 1)	//изменить на "если всё уже рассмотрели", а корня нет
 				if (currentNode->varsToBeConsidered == Nol)
 				{
 					
@@ -638,7 +487,6 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 					{
 						continueTravesal = false;
 						return (string)tmpI;
-						//тут нужен флаг, что мы нашли корень?
 					}
 
 					//иначе достаем элемент из стека
@@ -648,38 +496,15 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 						//записали адрес следующего элемента
 						currentNode = mystack.top();
 
-						//cout << "cN fr stack  " << (string)(*currentNode->dnf[0]) << endl;
 
 						//удаление из стека.
 						mystack.pop();
-
-						//Вывод информации о узле, т.е. номер переменной, и какое значение было зафиксировано  
-						//cout << "---->FromSteck" << '(' << currentNode->var << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
-						
-						/*
-						cout << "Node->dnf:" << endl;
-						for (int i = 0; i < size; i++)
-						{
-
-							if (!currentNode->dnf[i])
-							{
-								cout << "+" << endl;
-							}
-
-							else
-							{
-								cout << (string)*currentNode->dnf[i] << endl;
-							}
-						}
-						cout << "end dnf" << endl;
-
-						*/
 
 					}
 						
 				}
 
-				// Здесь фиксируем переменную обхода, так как обходим последовательно все, то выбираем следующую 
+				// Здесь фиксируем переменную обхода
 				else
 				{
 					
@@ -692,11 +517,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 					if (component.n_comp == -2)
 					{
-						//cout << "Rule 2" << endl;
-
-						//continueTravesal = false;
-						//break;
-
+						cout << "Root is NOT exist. Return empty vector.\n";
 						return (string)tmpI;
 					}
 
@@ -712,19 +533,11 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 						if (component.val_comp == 0)
 						{
-							//currentNode->fixVal_0 = true;
-							//currentNode->Solution.setValue('0', posA);
-
-							//фиксируем противоположное значение 
 							newNode->fixVal_1 = true;
 						}
 
 						if (component.val_comp == 1)
-						{
-							//currentNode->fixVal_1 = true;
-							//currentNode->Solution.setValue('1', posA);
-
-							//фиксируем противоположное значение 
+						{ 
 							newNode->fixVal_0 = true;
 						}
 
@@ -738,35 +551,12 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 						newNode->Solution = currentNode->Solution;
 
 
-						//Знасим этот узел в стек
+						//Заносим этот узел в стек
 						mystack.push(newNode);
-						//cout << "New Node with Var" << '(' << posA << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
-
-						/*
-						cout << "Node->dnf:" << endl;
-						for (int i = 0; i < size; i++)
-						{
-
-							if (!currentNode->dnf[i])
-							{
-								cout << "+" << endl;
-							}
-
-							else
-							{
-								cout << (string)*currentNode->dnf[i] << endl;
-							}
-						}
-						cout << "end dnf" << endl;
-
-						*/
 
 					}
 
 
-					//component.Print();
-
-					//posA++;
 					posA = component.n_comp;
 					currentNode->var = posA;
 
@@ -779,13 +569,11 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 					if (component.val_comp == 0)
 					{
 						currentNode->fixVal_0 = true;
-						//currentNode->Solution.setValue('0', posA);
 					}
 
 					if (component.val_comp == 1)
 					{
 						currentNode->fixVal_1 = true;
-						//currentNode->Solution.setValue('1', posA);
 					}
 
 					
@@ -806,22 +594,14 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 				
 
 				// относительно текущей фиксации значений
-				//cout << "Simplification " << endl;
-				posA = currentNode->var;
-				//cout << "Node" << '(' << posA << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
 
-				//В целом, здесь можно примать решение о том , нужно ли для текущего продолжать анализ.
+				posA = currentNode->var;
 				
 
 				//СОЗДАНИЕ НОВОЙ ДНФ, МАСКИ И ОБНОВЛЕНИЕ УЗЛА
 
 
 				currentNode->varsToBeConsidered[posA] = 0;
-				//cout << "varsToBeConsidered: " << endl;
-				//cout << currentNode->varsToBeConsidered << endl;
-
-
-
 
 
 				//скользкий момент!
@@ -845,7 +625,9 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 				Simplification(component, currentNode, size);
 
-				/*
+				
+				//cout << "Simplification " << endl;
+
 				for (int i = 0; i < size; i++)
 				{
 
@@ -859,20 +641,21 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 						cout << (string)*currentNode->dnf[i] << endl;
 					}
 				}
-				*/
+
+
+				//cout << (string)currentNode->Solution << endl;
+
+				/**/
 
 
 				//ЕСЛИ ДНФ ОКАЗАЛАСЬ ПУСТА, ТО НАЙДЕН КОРЕНЬ
 				//ВЫВОДИМ "НАШЛИ КОРЕНЬ", САМ КОРЕНЬ И ПРЕКРАЩАЕМ ОБХОД
 				//cout << "Solution:" << endl;
 
-				//cout << (string)currentNode->Solution << endl;
+				
 
 				if (currentNode->count == 0)
 				{
-					//cout << "ROOT:    "<< (string)currentNode->Solution << endl;
-					//continueTravesal = false;
-
 					return (string)currentNode->Solution;
 				}
 

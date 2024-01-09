@@ -4,15 +4,14 @@
 
 Interval::Interval(size_t len)
 {
-	
-	//cout << "Interval(size_t len), len =" << len << endl;
 	vec = BBV(len);
 	dnc = BBV(len);
 }
 
 Interval::Interval(const char* vec_in, const char* dnc_in)
 {
-	//ѕровер€ем , если строки не пустые и их длины совпадают, то инициализируем вектора, иначе ошибка и в этом случае создаем нулевые веткора мин длины(1 байт).
+	// ѕровер€ем , если строки не пустые и их длины совпадают, то инициализируем вектора, 
+	// иначе ошибка и в этом случае создаем нулевые веткора мин длины(1 байт).
 	if (vec_in && dnc_in && strlen(vec_in) == strlen(dnc_in))
 	{
 		vec = BBV(vec_in);
@@ -49,31 +48,6 @@ Interval::Interval(const char* vector)
 
 
 
-Interval::Interval(string& s)
-{
-	size_t sz = s.length();
-	
-	if (sz)
-	{
-		vec = BBV(sz);
-		dnc = BBV(sz);
-		int ix = 0;
-		while (ix < sz)
-		{
-			if (s[ix] == '-')
-				dnc[ix] = 1;
-			else
-				if (s[ix] == '1')
-					vec[ix] = 1;
-			ix++;
-		}
-	}
-}
-
-
-
-
-
 Interval::Interval(BBV& vec_in, BBV& dnc_in)
 {
 	vec = vec_in;
@@ -87,7 +61,6 @@ void Interval::setInterval(BBV& vec, BBV& dnc)
 
 Interval& Interval::operator=(Interval& ibv)
 {
-	// TODO: вставьте здесь оператор return
 
 	vec = ibv.vec;
 	dnc = ibv.dnc;
@@ -133,21 +106,6 @@ int Interval::rang()
 	return (vec.getSize() - dnc.getWeight());
 }
 
-//–еализуем в соответсвии с примером из лекций
-/*
-
-bool IsOrthogonal(struct Interval u, struct Interval v )
-{
-unsigned long tmpUV, tmpU, tmpV;
-tmpUV = v.dnc | u.dnc;
-tmpU = u.vec | tmpUV;
-tmpV = v.vec | tmpUV;
-if ((tmpU ^ tmpV) != 0)
-return true;
-return false;
-}
-
-*/
 
 bool Interval::isOrthogonal(Interval& ibv)
 {
@@ -188,30 +146,7 @@ bool Interval::isOrthogonal(Interval& ibv)
 
 }
 
-Interval& Interval::mergeInterval(Interval& ibv)
-{
 
-	//≈сли требуетс€, реализовать самосто€тельно
-	// TODO: вставьте здесь оператор return
-
-	return *this;
-}
-
-
-
-bool Interval::isIntersection(Interval& ibv)
-{
-	//≈сли требуетс€, реализовать самосто€тельно
-
-	return false;
-}
-
-bool Interval::isAbsorb(Interval& ibv)
-{
-	//≈сли требуетс€, реализовать самосто€тельно
-
-	return false;
-}
 
 char Interval::getValue(int ix)
 {
@@ -247,12 +182,10 @@ void Interval::setDnc(BBV& v)
 }
 
 void Interval::setValue(char value, int ix)
-{
-	//cout << "vec.size = " << vec.getSize() << " ix = " << ix << endl;
-
-	
+{	
 	if (ix < 0 || ix > vec.getSize())
 		throw "Out of range";
+
 	if (value == '-')
 	{
 		dnc[ix] = 1;

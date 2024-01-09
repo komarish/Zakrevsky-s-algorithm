@@ -21,13 +21,15 @@ int main()
 	
 	std::cout << "Hello World!\n";
 
-	string pla_path = "../DNF_Random_examples/dnfRnd_1.pla";
+	string pla_path = "../DNF_Random_examples/dnfRnd_5.pla";
 
 	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_1.pla";
 	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_5.pla";
 
 
 	BoolEquation equation;
+
+	string root;
 
 	equation.readFromPla(pla_path);
 	equation.PrintEquation();
@@ -43,20 +45,23 @@ int main()
 	simpleHeuristics sH;
 
 	//cout << "greedHeuristics do : ";
-	//IH = &gH;
-	//alg->setHeuristics(IH);
-	//alg->findRoot();
+	IH = &gH;
+	alg->setHeuristics(IH);
+	//alg->findRoot(equation);
 	//cout << alg->getHeuristicsName() << endl;
 
 
+
+	//-----
 	//cout << "simpleHeuristics do : ";
-	IH = &sH;
-	alg->setHeuristics(IH);
-	cout << alg->getHeuristicsName() << endl;
+	//IH = &sH;
+	//alg->setHeuristics(IH);
+	//cout << alg->getHeuristicsName() << endl;
+	//-----
 
 	
 
-	string root;
+
 
 	root = alg->findRoot(equation);
 

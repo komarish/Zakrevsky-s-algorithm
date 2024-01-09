@@ -5,8 +5,6 @@
 
 class Interval
 {
-	
-public:
 	BBV vec;
 	BBV dnc;
 public:
@@ -16,28 +14,18 @@ public:
 	Interval(BBV& vec_in, BBV& dnc_in);
 	void setInterval(BBV& vec, BBV& dnc);
 	Interval& operator=(Interval& ibv);
-
 	bool operator==(Interval& ibv);
 	bool operator!=(Interval& ibv);
-
-	Interval(string& s);
-
 	operator string();
-
 	int length(); // Длина или количество переменных 
-	int rang();// Ранг интервала
+	int rang(); // Ранг интервала
 	bool isOrthogonal(Interval& ibv);
-	Interval& mergeInterval(Interval& ibv); // Построение пересечения интервалов
-	bool isIntersection(Interval& ibv);
-	bool isAbsorb(Interval& ibv);
-	char getValue(int ix);//Получить i ое значение компоненты интервала
+	char getValue(int ix); // Получить i ое значение компоненты интервала
 	BBV getVec();
 	BBV getDnc();
 	void setVec(BBV& v);
 	void setDnc(BBV& v);
-
-	void setValue(char value, int ix); //Установить iое значение интервала
-
+	void setValue(char value, int ix); // Установить iое значение интервала
 };
 
 

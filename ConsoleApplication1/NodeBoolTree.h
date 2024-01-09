@@ -8,7 +8,7 @@ class NodeBoolTree
 public:
 	unsigned int var;// номер переменной xi разложения
 
-	NodeBoolTree* lt, * rt;
+	//NodeBoolTree* lt, * rt;
 
 	int count;// мощьность множества интервалов
 	Interval** dnf;//множество интервалов
@@ -31,8 +31,8 @@ public:
 
 		var = 0;
 
-		lt = nullptr;
-		rt = nullptr;
+		//lt = nullptr;
+		//rt = nullptr;
 
 		fixVal_1 = false;
 		fixVal_0 = false;
