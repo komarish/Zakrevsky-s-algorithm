@@ -21,7 +21,7 @@ int main()
 	
 	std::cout << "Hello World!\n";
 
-	string pla_path = "../DNF_Random_examples/dnfRnd_5.pla";
+	string pla_path = "../DNF_Random_examples/dnfRnd_12.pla";
 
 	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_1.pla";
 	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_5.pla";
@@ -51,11 +51,33 @@ int main()
 	//cout << alg->getHeuristicsName() << endl;
 
 
+	root = alg->findRoot(equation);
+
+	cout << "Root (" << pla_path << "): \n" << root << endl;
+
+	Interval Solution1(root.c_str());
+
+	bool answer = equation.isSolution(Solution1);
+
+	if (answer)
+	{
+		cout << "This vector is Solution.\n";
+	}
+
+	else
+	{
+		cout << "This vector is NOT Solution.\n";
+	}
+
+
+
+
+	/**/
 
 	//-----
 	//cout << "simpleHeuristics do : ";
-	//IH = &sH;
-	//alg->setHeuristics(IH);
+	IH = &sH;
+	alg->setHeuristics(IH);
 	//cout << alg->getHeuristicsName() << endl;
 	//-----
 
@@ -67,9 +89,9 @@ int main()
 
 	cout << "Root (" << pla_path << "): \n" << root << endl;
 
-	Interval Solution(root.c_str());
+	Interval Solution2(root.c_str());
 
-	bool answer = equation.isSolution(Solution);
+	answer = equation.isSolution(Solution2);
 
 	if (answer)
 	{
@@ -81,7 +103,7 @@ int main()
 		cout << "This vector is NOT Solution.\n";
 	}
 	
-
+	
 	//cout << alg->getHeuristicsName() << endl;
 
 	

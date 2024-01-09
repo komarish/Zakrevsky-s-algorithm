@@ -29,7 +29,7 @@ public:
 	{
 		int min_i = 0; //индекс мин. опред. строки
 
-		int min_rang = countVar; 
+		int min_rang = countVar + 1; 
 
 
 		for (int i = 0; i < sz; i++)
@@ -58,7 +58,7 @@ public:
 
 			int rang = tmpI.rang();
 
-			if (tmpI.rang() <= min_rang)
+			if (tmpI.rang() < min_rang)
 			{
 				min_rang = rang;
 				min_i = i;
@@ -73,7 +73,7 @@ public:
 
     Component checkRules(NodeBoolTree*& node, int sz, int countVar)
     {
-        cout << "greedHeuristics - checkRules\n";
+        //cout << "greedHeuristics - checkRules\n";
 
 		Component component;
 
@@ -82,12 +82,13 @@ public:
 		int max_num = 0, tmp_max = 0,
 			tmp_0, tmp_1; //кол-во единиц и нулей
 
-		int value, tmp_value, vect_value, index;
+		//int value = 0, tmp_value = 0, vect_value, index = 0;
+		int value = 0, tmp_value = 0, vect_value, index;
 
 		for (int j = 0; j < countVar; j++)
 		{
 			//определенные компоненты
-			if (node->varsToBeConsidered[j] && node->dnf[min_i]->getDnc()[j])
+			if (node->varsToBeConsidered[j] && !node->dnf[min_i]->getDnc()[j])
 			{
 				tmp_0 = 0;
 				tmp_1 = 0;
@@ -120,12 +121,16 @@ public:
 					tmp_max = tmp_0;
 
 					tmp_value = 0;
+
+
 				}
 				else
 				{
 					tmp_max = tmp_1;
 
 					tmp_value = 1;
+
+
 				}
 
 
@@ -135,6 +140,9 @@ public:
 
 					index = j;
 					value = tmp_value;
+
+
+
 				}
 
 				

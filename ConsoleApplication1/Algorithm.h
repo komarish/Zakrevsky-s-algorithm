@@ -486,6 +486,8 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 					if (mystack.empty())
 					{
 						continueTravesal = false;
+
+						cout << "Root DOES NOT exist. Return empty vector.\n";
 						return (string)tmpI;
 					}
 
@@ -517,7 +519,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 					if (component.n_comp == -2)
 					{
-						cout << "Root is NOT exist. Return empty vector.\n";
+						cout << "Root DOES NOT exist. Return empty vector.\n";
 						return (string)tmpI;
 					}
 
@@ -625,8 +627,9 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 				Simplification(component, currentNode, size);
 
+				/*
 				
-				//cout << "Simplification " << endl;
+				cout << "Simplification " << endl;
 
 				for (int i = 0; i < size; i++)
 				{
@@ -643,9 +646,9 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 				}
 
 
-				//cout << (string)currentNode->Solution << endl;
+				cout << (string)currentNode->Solution << endl;
 
-				/**/
+				*/
 
 
 				//ÅÑËÈ ÄÍÔ ÎÊÀÇÀËÀÑÜ ÏÓÑÒÀ, ÒÎ ÍÀÉÄÅÍ ÊÎÐÅÍÜ
