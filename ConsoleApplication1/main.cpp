@@ -13,208 +13,6 @@
 
 using namespace std;
 
-#include <vector>
-
-void readFromPlaFile(string file_name)
-{
-	std::ifstream input(file_name);
-
-	if (input.is_open()) {
-		std::vector<std::vector<int>> matrix;
-		std::string line;
-
-		while (getline(input, line)) {
-			// Пропускаем комментарии
-			if (line[0] == '#') continue;
-
-			line.erase(line.find_last_not_of(" \n\r\t") + 1);
-
-			// Считываем информацию о входах, выходах и матрице
-			if (line.substr(0, 2) == ".i") {
-				// Извлекаем количество входов
-				int num_inputs = std::stoi(line.substr(3));
-				std::cout << "Количество входов: " << num_inputs << std::endl;
-			}
-			else if (line.substr(0, 2) == ".o") {
-				// Извлекаем количество выходов
-				int num_outputs = std::stoi(line.substr(3));
-				std::cout << "Количество выходов: " << num_outputs << std::endl;
-			}
-			else if (line.substr(0, 2) == ".p") {
-				// Извлекаем количество строк матрицы
-				int num_rows = std::stoi(line.substr(3));
-				std::cout << "Количество строк матрицы: " << num_rows << std::endl;
-
-				// Расширяем матрицу до нужного размера
-				matrix.resize(num_rows, std::vector<int>());
-
-				// Считываем значения матрицы
-				for (int i = 0; i < num_rows; ++i) {
-					getline(input, line);
-					line.erase(line.find_last_not_of(" \n\r\t") + 1);
-
-					for (char c : line) {
-						if (c != ' ') {
-							if (c == '-')
-							{
-								matrix[i].push_back(2);
-							}
-
-							else
-							{
-								matrix[i].push_back(c - '0');
-							}
-							
-						}
-					}
-				}
-			}
-		}
-
-		// Выводим считанную матрицу
-		std::cout << "Матрица:" << std::endl;
-		for (const auto& row : matrix) {
-			for (int val : row) {
-				std::cout << val << " ";
-			}
-			std::cout << std::endl;
-		}
-
-		input.close();
-	}
-	else {
-		std::cerr << "Не удалось открыть файл " << file_name << std::endl;
-	}
-
-}
-
-
-
-
-void readFromPla(string file_name)
-{
-	std::ifstream input(file_name);
-
-	if (input.is_open()) {
-
-		std::string line;
-		int num_rows;
-		int num_inputs;
-		int num_outputs;
-
-		Interval** setIntevals;
-
-		while (getline(input, line)) {
-			// Пропускаем комментарии
-			if (line[0] == '#') continue;
-
-			line.erase(line.find_last_not_of(" \n\r\t") + 1);
-
-			// Считываем информацию о входах, выходах и матрице
-			if (line.substr(0, 2) == ".i") 
-			{
-				// Извлекаем количество входов
-				num_inputs = std::stoi(line.substr(3));
-				std::cout << "num_inputs: " << num_inputs << std::endl;
-			}
-			else if (line.substr(0, 2) == ".o") 
-			{
-				// Извлекаем количество выходов
-				num_outputs = std::stoi(line.substr(3));
-				std::cout << "num_outputs: " << num_outputs << std::endl;
-			}
-			else if (line.substr(0, 2) == ".p") 
-			{
-				// Извлекаем количество строк матрицы
-				num_rows = std::stoi(line.substr(3));
-				std::cout << "num_rows: " << num_rows << std::endl;
-
-				// Расширяем матрицу до нужного размера
-				//matrix.resize(num_rows, std::vector<int>());
-
-				setIntevals = new Interval * [num_rows];
-
-				// Считываем значения матрицы
-				for (int i = 0; i < num_rows; i++) 
-				{
-					
-					try
-					{
-						getline(input, line);
-
-
-						if (line.substr(0, 2) == ".e")
-						{
-							cout << "iii = " << i << "   " << line << endl;
-							if (i < num_rows)
-							{
-								//std::cerr << "Incorrect PLA" << file_name << std::endl;
-
-								exception e("Incorrect PLA");
-
-								throw e;
-							}
-						}
-					}
-					
-					catch (exception& e) 
-					{
-						cout << e.what()<<endl;
-						exit(3);
-					}
-
-					line.erase(line.find_last_not_of(" \n\r\t") + 1);
-
-
-					int length = line.length();
-
-					char* char_array = new char[length + 1];
-
-					// copying the contents of the 
-					// string to char array 
-					//strcpy_s(char_array, sizeof(char_array), line.c_str());
-
-					for(int cix = 0; cix < num_inputs; cix++)
-					{
-						char_array[cix] = line[cix];
-					}
-
-					char_array[num_inputs] = '\0';
-					
-					setIntevals[i] = new Interval(char_array);
-
-					cout << "i=" << i << endl;
-
-					cout << (string)(*setIntevals[i]) << endl;
-
-					delete[] char_array;
-					
-				}
-
-				// Выводим считанную матрицу
-				std::cout << "Matrix:" << std::endl;
-
-				for (int ix = 0; ix < num_rows; ix++)
-				{
-					cout << (string)(*setIntevals[ix]) << endl;
-				}
-			}
-		}
-
-		
-
-
-		input.close();
-	}
-	else 
-	{
-		std::cerr << "File not open" << file_name << std::endl;
-	}
-
-}
-
-
-
 
 
 /**/
@@ -223,8 +21,119 @@ int main()
 	
 	std::cout << "Hello World!\n";
 
+	//string pla_path = "../DNF_Random_examples/dnfRnd_2.pla";
+
+	string pla_path = "../DNF_Random_examples/my_examples/my_pla_1.pla";
+	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_4.pla";
 
 
+	BoolEquation equation;
+
+	equation.readFromPla(pla_path);
+	equation.PrintEquation();
+
+
+	Algorithm* alg = new Algorithm();
+
+
+	Heuristics* IH;
+
+	//набор эвристик
+	greedHeuristics gH;
+	simpleHeuristics sH;
+
+	//cout << "greedHeuristics do : ";
+	//IH = &gH;
+	//alg->setHeuristics(IH);
+	//alg->findRoot();
+	//cout << alg->getHeuristicsName() << endl;
+
+
+	//cout << "simpleHeuristics do : ";
+	IH = &sH;
+	alg->setHeuristics(IH);
+	cout << alg->getHeuristicsName() << endl;
+
+	
+
+	string root;
+
+	root = alg->findRoot(equation);
+
+	cout << "Root (" << pla_path << "):" << root << endl;
+
+	Interval Solution(root.c_str());
+
+	bool answer = equation.isSolution(Solution);
+
+	if (answer)
+	{
+		cout << "This root is Solution.\n";
+	}
+
+	else
+	{
+		cout << "This root is NOT Solution.\n";
+	}
+	
+
+	//cout << alg->getHeuristicsName() << endl;
+
+	
+
+
+	/*
+	char setII[10][100] = {
+			"000-0-",
+			"010-0-",
+			"--010-",
+			"-10--0",
+			"0---10",
+			"-1-0-0",
+			"1-11--",
+			"00--00",
+			"1-1-1-",
+			"1--010"
+	};
+
+
+
+	int sz = 10;
+
+	Interval** setIntevals = new Interval * [sz];
+
+	for (int ix = 0; ix < sz; ix++)
+	{
+		setIntevals[ix] = new Interval(setII[ix]);
+	}
+
+
+	for (int ix = 0; ix < sz; ix++)
+	{
+		cout << (string)(*setIntevals[ix]) << endl;
+	}
+
+	cout << "end" << endl;
+
+
+
+	Interval Solution("1-00-1");
+
+	bool sol;
+	sol = isSolution(setIntevals, Solution, sz);
+	cout << "isSolution: " << sol << endl;
+
+
+
+	for (int ix = 0; ix < sz; ix++)
+	{
+		delete setIntevals[ix];
+		setIntevals[ix] = nullptr;
+	}
+
+*/
+
+	/*
 
 	string path = "../DNF_Random_examples/dnfRnd_2.pla";
 	
@@ -246,7 +155,7 @@ int main()
 	}
 
 	else cout << "Unable to open file";
-
+	*/
 
 
 

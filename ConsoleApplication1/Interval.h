@@ -16,8 +16,11 @@ public:
 	Interval(BBV& vec_in, BBV& dnc_in);
 	void setInterval(BBV& vec, BBV& dnc);
 	Interval& operator=(Interval& ibv);
+
 	bool operator==(Interval& ibv);
 	bool operator!=(Interval& ibv);
+
+	Interval(string& s);
 
 	operator string();
 

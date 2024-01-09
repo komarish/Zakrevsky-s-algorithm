@@ -46,6 +46,34 @@ Interval::Interval(const char* vector)
 	}
 }
 
+
+
+
+Interval::Interval(string& s)
+{
+	size_t sz = s.length();
+	
+	if (sz)
+	{
+		vec = BBV(sz);
+		dnc = BBV(sz);
+		int ix = 0;
+		while (ix < sz)
+		{
+			if (s[ix] == '-')
+				dnc[ix] = 1;
+			else
+				if (s[ix] == '1')
+					vec[ix] = 1;
+			ix++;
+		}
+	}
+}
+
+
+
+
+
 Interval::Interval(BBV& vec_in, BBV& dnc_in)
 {
 	vec = vec_in;
@@ -123,8 +151,8 @@ return false;
 
 bool Interval::isOrthogonal(Interval& ibv)
 {
-	cout << (string)(*this) << endl;
-	cout << (string)ibv << endl;
+	//cout << (string)(*this) << endl;
+	//cout << (string)ibv << endl;
 
 	BBV zero(vec.getSize());
 
@@ -151,7 +179,7 @@ bool Interval::isOrthogonal(Interval& ibv)
 	answer = (tmpU ^ tmpV);
 	//Output vector for debug
 
-	//cout << (string)answer << endl;
+	//cout << "answer"<< (string)answer << endl;
 
 	if (answer != zero)
 		return true;
