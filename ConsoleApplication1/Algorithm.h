@@ -78,7 +78,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 		//строки, которые не "удаляются" из матрицы
 		if (row_value == !component.val_comp)
 		{
-			cout << i << endl;
+			//cout << i << endl;
 			//newDnf[i] = setIntevals[i];
 			//node->dnf[i] = nullptr;
 			node->rowsToBeConsidered[i] = 0;
@@ -90,7 +90,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 
 
-	cout << "count = " << node->count << endl;
+	//cout << "count = " << node->count << endl;
 	
 }
 
@@ -239,7 +239,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 					{
 						if (!dnc[j]) //компонента определена
 						{
-							cout << "rule 1: " << i << endl;
+							//cout << "rule 1: " << i << endl;
 
 							component.n_comp = j;
 							component.val_comp = !(node->dnf[i]->getVec()[j]);
@@ -508,12 +508,12 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 		BBV varsToBeConsidered(countVar);
 
 		varsToBeConsidered = ~varsToBeConsidered;
-		cout << "varsToBeConsidered: " << varsToBeConsidered << endl;
+		//cout << "varsToBeConsidered: " << varsToBeConsidered << endl;
 
 
 		BBV rowsToBeConsidered(size);
 		rowsToBeConsidered = ~rowsToBeConsidered;
-		cout << "rowsToBeConsidered: " << rowsToBeConsidered << endl;
+		//cout << "rowsToBeConsidered: " << rowsToBeConsidered << endl;
 
 		/*
 		//varsToBeConsidered = ~varsToBeConsidered;
@@ -566,8 +566,8 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 			//просто копируем адреса, из setIntevals[ix] в currentNode->dnf[ix].
 			currentNode->dnf[ix] = setIntevals[ix];		
 
-			cout << setIntevals[ix] << endl;
-			cout<< (string)(*currentNode->dnf[ix]) << endl;
+			//cout << setIntevals[ix] << endl;
+			//cout<< (string)(*currentNode->dnf[ix]) << endl;
 		}
 
 		//Изначально задаем для полей  fixVal_0 и fixVal_1 значение false, 
@@ -581,23 +581,23 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 		// !
 		currentNode->Solution = tmpI;
 		
-		cout << (string)currentNode->Solution << endl;
+		//cout << (string)currentNode->Solution << endl;
 
 		//cout << currentNode->dnf[0]->length() << endl;
 
 		currentNode->varsToBeConsidered = varsToBeConsidered;
 
-		cout << currentNode->varsToBeConsidered << endl;
+		//cout << currentNode->varsToBeConsidered << endl;
 
 		currentNode->rowsToBeConsidered = rowsToBeConsidered;
 
-		cout << currentNode->rowsToBeConsidered << endl;
+		//cout << currentNode->rowsToBeConsidered << endl;
 
 		Component component;
 
 		while (continueTravesal)
 		{
-			cout << "continueTravesal: " << continueTravesal << endl;
+			//cout << "continueTravesal: " << continueTravesal << endl;
 
 
 
@@ -654,9 +654,9 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 						mystack.pop();
 
 						//Вывод информации о узле, т.е. номер переменной, и какое значение было зафиксировано  
-						cout << "---->FromSteck" << '(' << currentNode->var << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
+						//cout << "---->FromSteck" << '(' << currentNode->var << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
 						
-						
+						/*
 						cout << "Node->dnf:" << endl;
 						for (int i = 0; i < size; i++)
 						{
@@ -673,7 +673,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 						}
 						cout << "end dnf" << endl;
 
-
+						*/
 
 					}
 						
@@ -692,7 +692,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 					if (component.n_comp == -2)
 					{
-						cout << "Rule 2" << endl;
+						//cout << "Rule 2" << endl;
 
 						//continueTravesal = false;
 						//break;
@@ -740,9 +740,9 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 						//Знасим этот узел в стек
 						mystack.push(newNode);
-						cout << "New Node with Var" << '(' << posA << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
+						//cout << "New Node with Var" << '(' << posA << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
 
-
+						/*
 						cout << "Node->dnf:" << endl;
 						for (int i = 0; i < size; i++)
 						{
@@ -759,12 +759,12 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 						}
 						cout << "end dnf" << endl;
 
-
+						*/
 
 					}
 
 
-					component.Print();
+					//component.Print();
 
 					//posA++;
 					posA = component.n_comp;
@@ -806,9 +806,9 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 				
 
 				// относительно текущей фиксации значений
-				cout << "Simplification " << endl;
+				//cout << "Simplification " << endl;
 				posA = currentNode->var;
-				cout << "Node" << '(' << posA << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
+				//cout << "Node" << '(' << posA << ',' << "L(" << currentNode->fixVal_0 << ")," << "R(" << currentNode->fixVal_1 << ")" << endl;
 
 				//В целом, здесь можно примать решение о том , нужно ли для текущего продолжать анализ.
 				
@@ -817,8 +817,8 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 
 				currentNode->varsToBeConsidered[posA] = 0;
-				cout << "varsToBeConsidered: " << endl;
-				cout << currentNode->varsToBeConsidered << endl;
+				//cout << "varsToBeConsidered: " << endl;
+				//cout << currentNode->varsToBeConsidered << endl;
 
 
 
@@ -845,6 +845,7 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 				Simplification(component, currentNode, size);
 
+				/*
 				for (int i = 0; i < size; i++)
 				{
 
@@ -858,17 +859,18 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 						cout << (string)*currentNode->dnf[i] << endl;
 					}
 				}
+				*/
 
 
 				//ЕСЛИ ДНФ ОКАЗАЛАСЬ ПУСТА, ТО НАЙДЕН КОРЕНЬ
 				//ВЫВОДИМ "НАШЛИ КОРЕНЬ", САМ КОРЕНЬ И ПРЕКРАЩАЕМ ОБХОД
-				cout << "Solution:" << endl;
+				//cout << "Solution:" << endl;
 
-				cout << (string)currentNode->Solution << endl;
+				//cout << (string)currentNode->Solution << endl;
 
 				if (currentNode->count == 0)
 				{
-					cout << "ROOT:    "<< (string)currentNode->Solution << endl;
+					//cout << "ROOT:    "<< (string)currentNode->Solution << endl;
 					//continueTravesal = false;
 
 					return (string)currentNode->Solution;

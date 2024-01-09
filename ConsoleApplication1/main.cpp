@@ -21,10 +21,10 @@ int main()
 	
 	std::cout << "Hello World!\n";
 
-	//string pla_path = "../DNF_Random_examples/dnfRnd_2.pla";
+	string pla_path = "../DNF_Random_examples/dnfRnd_1.pla";
 
-	string pla_path = "../DNF_Random_examples/my_examples/my_pla_1.pla";
-	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_4.pla";
+	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_1.pla";
+	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_5.pla";
 
 
 	BoolEquation equation;
@@ -60,7 +60,7 @@ int main()
 
 	root = alg->findRoot(equation);
 
-	cout << "Root (" << pla_path << "):" << root << endl;
+	cout << "Root (" << pla_path << "): \n" << root << endl;
 
 	Interval Solution(root.c_str());
 
@@ -68,12 +68,12 @@ int main()
 
 	if (answer)
 	{
-		cout << "This root is Solution.\n";
+		cout << "This vector is Solution.\n";
 	}
 
 	else
 	{
-		cout << "This root is NOT Solution.\n";
+		cout << "This vector is NOT Solution.\n";
 	}
 	
 

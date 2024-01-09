@@ -45,7 +45,7 @@ public:
 
     Component checkRules(NodeBoolTree*& node, int sz, int countVar)
     {
-        cout << "simpleHeuristics - checkRules\n";
+        //cout << "simpleHeuristics - checkRules\n";
 	
 	
 		Component component;
@@ -68,7 +68,7 @@ public:
 				for (int i = 0; i < sz; i++)
 				{
 			
-					if (!node->dnf[i])
+					if (!node->rowsToBeConsidered[i])
 					{
 						//break;
 						continue;
