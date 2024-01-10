@@ -11,7 +11,166 @@
 
 #include <exception> 
 
+#include <vector>
+
+
+
 using namespace std;
+
+
+bool isPlaFileCorrect(const string& file_name)
+{
+
+	ifstream input(file_name);
+
+	if (!input.is_open())
+	{
+		cout << file_name << ": " << "Cannot open file.\n";
+		return false;
+	}
+
+
+	if (input.peek() == EOF)
+	{
+		input.close();
+
+		cout << "File is empty.\n";
+		return false;
+	}
+
+
+	string line;
+
+	int num_rows = 0;
+	int num_inputs = 0;
+	int num_outputs = 0;
+	int count_var = 0;
+
+	while (getline(input, line))
+	{
+
+		// Пропускаем комментарии и пустые строки
+		if (line.empty() || line[0] == '#')
+		{
+			continue;
+		}
+
+		line.erase(line.find_last_not_of(" \n\r\t") + 1);
+
+		// Считываем информацию о входах, выходах и матрице
+		if (line.substr(0, 2) == ".i")
+		{
+			// Извлекаем количество входов
+			count_var = std::stoi(line.substr(3));
+
+
+			if (!count_var)
+			{
+				input.close();
+
+				cout << file_name << ": " << "Incorrect number of inputs.\n";
+				return false;
+			}
+
+
+		}
+		else if (line.substr(0, 2) == ".o")
+		{
+			// Извлекаем количество выходов
+			num_outputs = std::stoi(line.substr(3));
+			
+			// Если количество выходов не равно нулю
+			if (num_outputs)
+			{
+				input.close();
+
+				cout << file_name << ": " << "Incorrect number of outputs (should be 0).\n";
+				return false;
+			}
+		}
+		else if (line.substr(0, 2) == ".p")
+		{
+			// Извлекаем количество строк матрицы
+			num_rows = std::stoi(line.substr(3));
+
+			if (!num_rows)
+			{
+				input.close();
+
+				cout << file_name << ": " << "Incorrect number of rows.\n";
+				return false;
+			}
+
+
+			// Считываем значения матрицы
+			for (int i = 0; i < num_rows; i++)
+			{
+
+				
+				getline(input, line);
+
+				// Проверка, что строк не меньше,
+				// чем указано
+				if (line.substr(0, 2) == ".e")
+				{
+					if (i < num_rows)
+					{	
+						input.close();
+
+						cout << file_name << ": " << "Incorrect number of lines.\n";
+						return false;
+					}
+				}
+				
+
+				line.erase(line.find_last_not_of(" \n\r\t") + 1);
+
+				int lineCount = 0;
+
+				for (char& c : line)
+				{
+
+					if (c != '-' && c != '0' && c != '1')
+					{
+						input.close();
+						
+						cout << file_name << ": " << "Incorrect character.\n";
+						return false;
+					}
+					
+					lineCount++;
+				}
+
+				if (lineCount != count_var)
+				{
+					input.close();
+					
+					cout << file_name << ": " << "Incorrect line or incorrect number of inputs.\n";
+					return false;
+				}
+
+			}
+
+		}
+	}
+
+
+	// Если вообще не встретили таких переменных
+	if (!count_var || !num_rows)
+	{
+		input.close();
+
+		cout << file_name << ": " << "Incorrect PLA notation.\n";
+		return false;
+	}
+
+
+
+
+	input.close();
+	return true;
+
+}
 
 
 
@@ -19,13 +178,155 @@ using namespace std;
 int main()
 {
 	
-	std::cout << "Hello World!\n";
+	cout << "Checking the correctness of files...\n";
 
-	string pla_path = "../DNF_Random_examples/dnfRnd_12.pla";
+
+	vector<string> examples_paths, my_examples_paths;
+
+	int examples_count = 12,
+		my_examples_count = 6;
+
+
+	string examples_path = "../DNF_Random_examples/";
+
+	for (int i = 1; i <= examples_count; i++)
+	{
+		string path = examples_path + "dnfRnd_" + to_string(i) + ".pla";
+
+		if (isPlaFileCorrect(path))
+		{
+			examples_paths.push_back(path);
+		}
+	}
+
+
+
+	string my_examples_path = "../DNF_Random_examples/my_examples/";
+
+	for (int i = 1; i <= my_examples_count; i++)
+	{
+		string path = my_examples_path + "my_pla_" + to_string(i) + ".pla";
+
+		if (isPlaFileCorrect(path))
+		{
+			my_examples_paths.push_back(path);
+		}
+	}
+
+
+	cout << "\nThe following examples will be used:\n\n";
+
+	for (auto p : examples_paths)
+	{
+		cout << p << endl;
+	}
+
+
+	for (auto p : my_examples_paths)
+	{
+		cout << p << endl;
+	}
+
+
+	Algorithm* alg = new Algorithm();
+	Heuristics* IH;
+
+	greedHeuristics gH;
+	simpleHeuristics sH;
+
+
+	for (auto p : examples_paths)
+	{
+		cout << "\nCurrent example: " << p << "\n\n";
+
+
+		BoolEquation equation;
+
+		string root;
+
+		equation.readFromPla(p);
+
+		if (equation.getCountVar() < 30 && equation.getNumRows() < 50)
+		{
+			equation.PrintEquation();
+		}
+		
+		else
+		{
+			cout << "The matrix is too large, equation is not output.\n" << endl;
+		}
+
+		IH = &gH;
+		alg->setHeuristics(IH);
+
+		cout << "\nHeuristics Name: " << alg->getHeuristicsName() << endl;
+
+		root = alg->findRoot(equation);
+
+
+		cout << "Root: \n" << root << endl;
+		cout << "Number of iterations: " << alg->getLastCountOfIterations() << endl;
+
+		Interval greedSolution(root.c_str());
+
+		bool answer = equation.isSolution(greedSolution);
+
+		if (answer)
+		{
+			cout << "This vector is Solution.\n";
+		}
+
+		else
+		{
+			cout << "This vector is NOT Solution.\n";
+		}
+
+
+		IH = &sH;
+		alg->setHeuristics(IH);
+
+		cout << "\nHeuristics Name: " << alg->getHeuristicsName() << endl;
+
+		root = alg->findRoot(equation);
+
+
+		cout << "Root: \n" << root << endl;
+		cout << "Number of iterations: " << alg->getLastCountOfIterations() << endl;
+
+		Interval simpleSolution(root.c_str());
+
+		answer = equation.isSolution(simpleSolution);
+
+		if (answer)
+		{
+			cout << "This vector is Solution.\n";
+		}
+
+		else
+		{
+			cout << "This vector is NOT Solution.\n";
+		}
+
+
+		cout << "\n\n";
+
+	}
+
+
+
+
+
+
+	//string pla_path = "../DNF_Random_examples/dnfRnd_10.pla";
 
 	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_1.pla";
-	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_5.pla";
+	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_6.pla";
 
+
+	//cout << "isPlaFileCorrect: "<< isPlaFileCorrect(pla_path) << endl;
+
+
+	/*
 
 	BoolEquation equation;
 
@@ -72,7 +373,7 @@ int main()
 
 
 
-	/**/
+
 
 	//-----
 	//cout << "simpleHeuristics do : ";
@@ -105,7 +406,7 @@ int main()
 	
 	
 	//cout << alg->getHeuristicsName() << endl;
-
+	*/
 	
 
 

@@ -20,15 +20,23 @@ using namespace std;
 class Algorithm
 {
 	Heuristics* heuristics;
+
+	int lastCountOfIterations;
 	
 public:
-	enum HeuristicsFlags
-	{
-		SIMPLE,
-		GREED
-	};
 
-	
+	Algorithm()
+		: lastCountOfIterations(0)
+	{
+		heuristics = nullptr;
+	}
+
+
+	int getLastCountOfIterations()
+	{
+		return 
+			lastCountOfIterations;
+	}
 
 
 	void setHeuristics(Heuristics* h)
@@ -457,6 +465,10 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 
 		Component component;
 
+
+		lastCountOfIterations = 0;
+
+
 		while (continueTravesal)
 		{
 		
@@ -667,6 +679,10 @@ void Simplification(Component component, NodeBoolTree*& node, int sz)
 				//Если нужно, то сбрасываем зафиксированные значения, в противном случае останавливаем обход.
 				currentNode->fixVal_0 = false;
 				currentNode->fixVal_1 = false;
+
+
+
+				lastCountOfIterations++;
 
 
 			}

@@ -54,14 +54,16 @@ void BoolEquation::readFromPla(string file_name)
 
 	ifstream input(file_name);
 
-	if (input.is_open()) {
+	if (input.is_open()) 
+	{
 
 		string line;
 		//int num_rows;
 		//int num_inputs;
 		int num_outputs;
 
-		while (getline(input, line)) {
+		while (getline(input, line)) 
+		{
 
 			// Пропускаем комментарии
 			if (line[0] == '#') continue;
@@ -91,27 +93,9 @@ void BoolEquation::readFromPla(string file_name)
 				for (int i = 0; i < num_rows; i++)
 				{
 
-					try
-					{
-						getline(input, line);
+					
+					getline(input, line);
 
-
-						if (line.substr(0, 2) == ".e")
-						{
-							if (i < num_rows)
-							{
-								exception e("Incorrect PLA");
-
-								throw e;
-							}
-						}
-					}
-
-					catch (exception& e)
-					{
-						cout << e.what() << endl;
-						exit(3);
-					}
 
 					line.erase(line.find_last_not_of(" \n\r\t") + 1);
 
@@ -145,7 +129,7 @@ void BoolEquation::readFromPla(string file_name)
 	}
 	else
 	{
-		std::cerr << "File not open" << file_name << std::endl;
+		cerr << "File not open." << file_name << endl;
 	}
 
 
