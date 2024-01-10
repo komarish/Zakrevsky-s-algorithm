@@ -10,6 +10,23 @@
 
 
 
+void BoolEquation::PrintEquation()
+{
+
+	// Выводим считанную матрицу
+	std::cout << "MATRIX" << std::endl;
+	std::cout << "num_rows: " << num_rows << std::endl;
+	std::cout << "count_var:" << count_var << std::endl;
+
+	for (int ix = 0; ix < num_rows; ix++)
+	{
+		cout << (string)(*setIntevals[ix]) << endl;
+	}
+
+}
+
+
+
 bool BoolEquation::isSolution(Interval Solution)
 {
 	if (!setIntevals)
@@ -19,6 +36,8 @@ bool BoolEquation::isSolution(Interval Solution)
 
 	for (int i = 0; i < num_rows; i++)
 	{
+		//если решение не ортогонально хотя бы одному интервалу,
+		//возвращаем false
 		if (!(setIntevals[i]->isOrthogonal(Solution)))
 		{
 			return false;
@@ -50,23 +69,19 @@ void BoolEquation::readFromPla(string file_name)
 		}
 	}
 
-
-
 	ifstream input(file_name);
 
 	if (input.is_open()) 
 	{
 
 		string line;
-		//int num_rows;
-		//int num_inputs;
 		int num_outputs;
 
 		while (getline(input, line)) 
 		{
 
-			// Пропускаем комментарии
-			if (line[0] == '#') continue;
+			// Пропускаем комментарии и пустые строки
+			if (line.empty() || line[0] == '#') continue;
 
 			line.erase(line.find_last_not_of(" \n\r\t") + 1);
 
@@ -122,9 +137,6 @@ void BoolEquation::readFromPla(string file_name)
 			}
 		}
 
-
-
-
 		input.close();
 	}
 	else
@@ -132,13 +144,17 @@ void BoolEquation::readFromPla(string file_name)
 		cerr << "File not open." << file_name << endl;
 	}
 
-
-
-
-
-
-
-
 }
 
 
+BoolEquation::~BoolEquation()
+{
+	if (setIntevals)
+	{
+		for (int ix = 0; ix < num_rows; ix++)
+		{
+			delete setIntevals[ix];
+			setIntevals[ix] = nullptr;
+		}
+	}
+}

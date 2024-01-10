@@ -12,7 +12,6 @@ public:
 	Interval(const char* vec_in, const char* dnc_in);
 	explicit Interval(const char* vector);
 	Interval(BBV& vec_in, BBV& dnc_in);
-	void setInterval(BBV& vec, BBV& dnc);
 	Interval& operator=(Interval& ibv);
 	bool operator==(Interval& ibv);
 	bool operator!=(Interval& ibv);

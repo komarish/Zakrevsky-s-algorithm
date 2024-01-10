@@ -5,24 +5,30 @@
 
 
 #include <iostream>
-
 #include <fstream>
 #include <string>
-
 #include <exception> 
-
 #include <vector>
 
 
 
 using namespace std;
 
+// Функция проверки pla-файла на корректность
+// Функция возвращает false (файл не корректен), когда:
+// - файл не удалось открыть
+// - файл пуст
+// - когда количество выходов не равно нулю (требования в данной задаче)
+// - когда количество переменных не совпадает с объявленным в файле или оно равно нулю
+// - когда количество строк не совпадает с объявленным в файле или оно равно нулю
+// - когда символ в строке матрицы не является одним из трех: (-, 0, 1)
 
 bool isPlaFileCorrect(const string& file_name)
 {
 
 	ifstream input(file_name);
 
+	// Проверяем, что файл открылся
 	if (!input.is_open())
 	{
 		cout << file_name << ": " << "Cannot open file.\n";
@@ -30,6 +36,7 @@ bool isPlaFileCorrect(const string& file_name)
 	}
 
 
+	//Проверяем, что файл не пуст
 	if (input.peek() == EOF)
 	{
 		input.close();
@@ -41,10 +48,10 @@ bool isPlaFileCorrect(const string& file_name)
 
 	string line;
 
-	int num_rows = 0;
-	int num_inputs = 0;
-	int num_outputs = 0;
-	int count_var = 0;
+	int num_rows = 0; //кол-во строк (.p)
+	int num_inputs = 0; //кол-во входов (.i)
+	int num_outputs = 0; //кол-во выходов (.o)
+	int count_var = 0; //кол-во переменных
 
 	while (getline(input, line))
 	{
@@ -63,7 +70,7 @@ bool isPlaFileCorrect(const string& file_name)
 			// Извлекаем количество входов
 			count_var = std::stoi(line.substr(3));
 
-
+			// Если количество переменных равно нулю
 			if (!count_var)
 			{
 				input.close();
@@ -93,6 +100,7 @@ bool isPlaFileCorrect(const string& file_name)
 			// Извлекаем количество строк матрицы
 			num_rows = std::stoi(line.substr(3));
 
+			// Если количество строк равно нулю
 			if (!num_rows)
 			{
 				input.close();
@@ -110,7 +118,7 @@ bool isPlaFileCorrect(const string& file_name)
 				getline(input, line);
 
 				// Проверка, что строк не меньше,
-				// чем указано
+				// чем указано в .p
 				if (line.substr(0, 2) == ".e")
 				{
 					if (i < num_rows)
@@ -129,7 +137,7 @@ bool isPlaFileCorrect(const string& file_name)
 
 				for (char& c : line)
 				{
-
+					// Проверка символов строки
 					if (c != '-' && c != '0' && c != '1')
 					{
 						input.close();
@@ -141,6 +149,8 @@ bool isPlaFileCorrect(const string& file_name)
 					lineCount++;
 				}
 
+				// Проверяем, что количество считанных символов
+				// равно указанному количеству переменных
 				if (lineCount != count_var)
 				{
 					input.close();
@@ -155,7 +165,7 @@ bool isPlaFileCorrect(const string& file_name)
 	}
 
 
-	// Если вообще не встретили таких переменных
+	// Если в файле не указаны нужные параметры
 	if (!count_var || !num_rows)
 	{
 		input.close();
@@ -166,26 +176,31 @@ bool isPlaFileCorrect(const string& file_name)
 
 
 
-
 	input.close();
 	return true;
 
 }
 
 
+//В функции main демонстрируется работа алгоритма на примерах.
+//В качестве примеров были использованы предложенные примеры (DNF_Random_examples)
+//и несколько примеров, составленных самостоятельно.
+//Директория "DNF_Random_examples/my_examples/" содержит два тривиальных примера my_pla_4.pla и my_pla_5.pla,
+//которые нужны для демонстрации работы алгоритма, когда уравнение не имеет корней.
 
-/**/
 int main()
 {
-	
-	cout << "Checking the correctness of files...\n";
+	//пути к файлам с примерами
+	vector<string> examples_paths;
 
-
-	vector<string> examples_paths, my_examples_paths;
-
+	//количество файлов в каждой из директорий
 	int examples_count = 12,
 		my_examples_count = 6;
 
+
+	//Проверяем файлы и отбираем корректные файлы 
+
+	cout << "Checking the correctness of files...\n";
 
 	string examples_path = "../DNF_Random_examples/";
 
@@ -193,6 +208,7 @@ int main()
 	{
 		string path = examples_path + "dnfRnd_" + to_string(i) + ".pla";
 
+		//Если файл прошел проверку, добавляем путь к нему в список
 		if (isPlaFileCorrect(path))
 		{
 			examples_paths.push_back(path);
@@ -200,6 +216,7 @@ int main()
 	}
 
 
+	//Аналогичная проверка для второй директории
 
 	string my_examples_path = "../DNF_Random_examples/my_examples/";
 
@@ -209,10 +226,11 @@ int main()
 
 		if (isPlaFileCorrect(path))
 		{
-			my_examples_paths.push_back(path);
+			examples_paths.push_back(path);
 		}
 	}
 
+	// Перечисляем файлы, которые были отобраны
 
 	cout << "\nThe following examples will be used:\n\n";
 
@@ -221,22 +239,30 @@ int main()
 		cout << p << endl;
 	}
 
+	//указатель на объект класса алгоритма
+	Algorithm* alg = new Algorithm(); 
 
-	for (auto p : my_examples_paths)
-	{
-		cout << p << endl;
-	}
+	//указатель на базовый класс эвристик
+	Heuristics* IH; 
 
-
-	Algorithm* alg = new Algorithm();
-	Heuristics* IH;
-
+	//объекты классов эвристик
 	greedHeuristics gH;
 	simpleHeuristics sH;
 
 
+	//Находим корень (или убеждаемся, что его не существует) для всех отобранных примеров.
+	//Считываем матрицу из pla-файла и, если она не слишком большая (до 50 строк и 30 переменных),
+	//выводим в консоль.
+	//Сначала ищем корень с помощью greedHeuristics, затем с помощью simpleHeuristics.
+	//Помимо найденного корня выводится количество итераций, потребовавшееся для нахождения корня. 
+	//Итерации считались по количеству операций упрощения матрицы (метод Simplification).
+	//Как правило, greedHeuristics демонстрирует результат хуже по сравнению с simpleHeuristics.
+	//После нахождения корня идет проверка найденного решения на то, что это действительно корень.
+
 	for (auto p : examples_paths)
 	{
+		//Выводим имя текущего файла
+
 		cout << "\nCurrent example: " << p << "\n\n";
 
 
@@ -244,8 +270,10 @@ int main()
 
 		string root;
 
+		//Считываем матрицу из файла
 		equation.readFromPla(p);
 
+		//Вывод матрицы
 		if (equation.getCountVar() < 30 && equation.getNumRows() < 50)
 		{
 			equation.PrintEquation();
@@ -255,6 +283,9 @@ int main()
 		{
 			cout << "The matrix is too large, equation is not output.\n" << endl;
 		}
+
+
+		//Поиск корня с помощью greedHeuristics
 
 		IH = &gH;
 		alg->setHeuristics(IH);
@@ -280,6 +311,8 @@ int main()
 		{
 			cout << "This vector is NOT Solution.\n";
 		}
+
+		//Поиск корня с помощью simpleHeuristics
 
 
 		IH = &sH;
@@ -313,279 +346,7 @@ int main()
 	}
 
 
-
-
-
-
-	//string pla_path = "../DNF_Random_examples/dnfRnd_10.pla";
-
-	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_1.pla";
-	//string pla_path = "../DNF_Random_examples/my_examples/my_pla_6.pla";
-
-
-	//cout << "isPlaFileCorrect: "<< isPlaFileCorrect(pla_path) << endl;
-
-
-	/*
-
-	BoolEquation equation;
-
-	string root;
-
-	equation.readFromPla(pla_path);
-	equation.PrintEquation();
-
-
-	Algorithm* alg = new Algorithm();
-
-
-	Heuristics* IH;
-
-	//набор эвристик
-	greedHeuristics gH;
-	simpleHeuristics sH;
-
-	//cout << "greedHeuristics do : ";
-	IH = &gH;
-	alg->setHeuristics(IH);
-	//alg->findRoot(equation);
-	//cout << alg->getHeuristicsName() << endl;
-
-
-	root = alg->findRoot(equation);
-
-	cout << "Root (" << pla_path << "): \n" << root << endl;
-
-	Interval Solution1(root.c_str());
-
-	bool answer = equation.isSolution(Solution1);
-
-	if (answer)
-	{
-		cout << "This vector is Solution.\n";
-	}
-
-	else
-	{
-		cout << "This vector is NOT Solution.\n";
-	}
-
-
-
-
-
-
-	//-----
-	//cout << "simpleHeuristics do : ";
-	IH = &sH;
-	alg->setHeuristics(IH);
-	//cout << alg->getHeuristicsName() << endl;
-	//-----
-
-	
-
-
-
-	root = alg->findRoot(equation);
-
-	cout << "Root (" << pla_path << "): \n" << root << endl;
-
-	Interval Solution2(root.c_str());
-
-	answer = equation.isSolution(Solution2);
-
-	if (answer)
-	{
-		cout << "This vector is Solution.\n";
-	}
-
-	else
-	{
-		cout << "This vector is NOT Solution.\n";
-	}
-	
-	
-	//cout << alg->getHeuristicsName() << endl;
-	*/
-	
-
-
-	/*
-	char setII[10][100] = {
-			"000-0-",
-			"010-0-",
-			"--010-",
-			"-10--0",
-			"0---10",
-			"-1-0-0",
-			"1-11--",
-			"00--00",
-			"1-1-1-",
-			"1--010"
-	};
-
-
-
-	int sz = 10;
-
-	Interval** setIntevals = new Interval * [sz];
-
-	for (int ix = 0; ix < sz; ix++)
-	{
-		setIntevals[ix] = new Interval(setII[ix]);
-	}
-
-
-	for (int ix = 0; ix < sz; ix++)
-	{
-		cout << (string)(*setIntevals[ix]) << endl;
-	}
-
-	cout << "end" << endl;
-
-
-
-	Interval Solution("1-00-1");
-
-	bool sol;
-	sol = isSolution(setIntevals, Solution, sz);
-	cout << "isSolution: " << sol << endl;
-
-
-
-	for (int ix = 0; ix < sz; ix++)
-	{
-		delete setIntevals[ix];
-		setIntevals[ix] = nullptr;
-	}
-
-*/
-
-	/*
-
-	string path = "../DNF_Random_examples/dnfRnd_2.pla";
-	
-
-	string line;
-	ifstream myfile(path);
-	if (myfile.is_open())
-	{
-		while (getline(myfile, line))
-		{
-			cout << line << '\n';
-		}
-		myfile.close();
-
-		cout << "\nreadFromPlaFile" << endl;
-
-		//readFromPlaFile(path);
-		readFromPla(path);
-	}
-
-	else cout << "Unable to open file";
-	*/
-
-
-
-
-
-
-	/*
-   
-
-    Algorithm* alg = new Algorithm();     
- 
-
-    Heuristics* IH;   
-
-    //набор эвристик
-    greedHeuristics gH;      
-    simpleHeuristics  sH;
-
-    //cout << "greedHeuristics do : ";
-    //IH = &gH;
-    //alg->setHeuristics(IH);
-    //alg->findRoot();
-    //cout << alg->getHeuristicsName() << endl;
-
-
-    cout << "simpleHeuristics do : ";
-    IH = &sH;
-    alg->setHeuristics(IH);
-    alg->findRoot();
-    cout << alg->getHeuristicsName() << endl;
-
-    //delete alg;
-    //delete IH;
-
-	 */
-
-	/*
-	char setII[10][100] = {
-			"00--1-1-100",
-			//"1-----1-100",
-			//"10011-00000",
-			"1-----1-101",
-			"10011-00001",
-			"--001-1----",
-			"---1001-000",
-			//"00000-1-100",
-			"----------1",
-			"--000000---",
-			"1---1-0010-",
-			"--0-----100",
-			//"-----------",
-			"1--11-1--00"
-	};
-
-	int sz = 10;
-	//
-	Interval** setIntevals = new Interval * [sz];
-
-	for (int ix = 0; ix < sz; ix++)
-	{
-		setIntevals[ix] = new Interval(setII[ix]);
-	}
-	//setIntevals[ix] - хранится адрес объекта
-	//*(setIntevals[ix]) - содержимое объекта
-	//(string)(*setIntevals[ix]) - явное преобразование в строку
-	for (int ix = 0; ix < sz; ix++)
-	{
-		cout << (string)(*setIntevals[ix]) << endl;
-	}
-
-	cout << "end" << endl;
-
-	//int count_var = setIntevals[0]->length();
-	//count_var = 
-	//BBV rule_2(sz);
-	//cout << rule_2 << endl;
-
-	Component c = scanMatrixHorizontal(setIntevals, sz);
-	c.Print();
-
-	//c = scanMatrixVertical(setIntevals, sz);
-	//c.Print();
-
-	Interval** newDnf;
-
-	newDnf = rule_5(c, setIntevals, sz);
-
-	
-	//for (int i = 0; i < sz; i++)
-	//{
-	//	if (newDnf[i])
-	//	{
-	//		cout << (newDnf[i]->rang()) << endl;
-	//	}
-	//	//cout << newDnf[i] << endl;
-	//}
-	
-
-	c = Heur(setIntevals, sz);
-	c.Print();
-
-	*/
+	delete alg;
 
 }
 

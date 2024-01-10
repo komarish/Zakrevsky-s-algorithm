@@ -55,9 +55,6 @@ Interval::Interval(BBV& vec_in, BBV& dnc_in)
 
 }
 
-void Interval::setInterval(BBV& vec, BBV& dnc)
-{
-}
 
 Interval& Interval::operator=(Interval& ibv)
 {
@@ -109,9 +106,6 @@ int Interval::rang()
 
 bool Interval::isOrthogonal(Interval& ibv)
 {
-	//cout << (string)(*this) << endl;
-	//cout << (string)ibv << endl;
-
 	BBV zero(vec.getSize());
 
 	BBV tmpUV(zero);
@@ -121,23 +115,12 @@ bool Interval::isOrthogonal(Interval& ibv)
 	BBV answer(zero);
 
 	tmpUV = dnc | ibv.dnc;
-	//Output vector for debug
-
-	//cout << (string)tmpUV << endl;
 
 	tmpU = vec | tmpUV;
-	//Output vector for debug
-	//cout << (string)tmpU << endl;
 
 	tmpV = ibv.vec | tmpUV;
-	//Output vector for debug
-
-	//cout << (string)tmpV << endl;
 
 	answer = (tmpU ^ tmpV);
-	//Output vector for debug
-
-	//cout << "answer"<< (string)answer << endl;
 
 	if (answer != zero)
 		return true;

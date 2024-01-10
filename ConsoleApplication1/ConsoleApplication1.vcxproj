@@ -132,7 +132,6 @@
     <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="BBV.cpp" />
     <ClCompile Include="BoolEquation.cpp" />
-    <ClCompile Include="Component.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Heuristics.cpp" />
     <ClCompile Include="Interval.cpp" />
